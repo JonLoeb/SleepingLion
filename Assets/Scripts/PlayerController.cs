@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour {
 
     public float speed;
+    public float drag;
     public Text countCreamText;
 
     private Rigidbody2D rigidBody;
@@ -15,6 +16,7 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
         // Get rigidbody
         rigidBody = GetComponent<Rigidbody2D>();
+        rigidBody.drag = drag;
 
         // Init cream collection count
         count = 0;
@@ -22,7 +24,7 @@ public class PlayerController : MonoBehaviour {
         // Set the count text
         SetCountText();
     }
-	
+
 	// Update is called once per frame
 	void Update () {
 	}
@@ -35,7 +37,15 @@ public class PlayerController : MonoBehaviour {
         float moveVertical = Input.GetAxis("Vertical");
 
         // Create a Vector2 for movement based on inputs
-        Vector2 movement = new Vector2(moveHorizontal, moveVertical);
+
+      //  Vector2 movement = new Vector2(moveHorizontal, moveVertical);
+      Vector2 movement = new Vector2(0, moveVertical);
+
+
+        if (Mathf.Abs(moveHorizontal) > Mathf.Abs(moveVertical)){
+          movement = new Vector2(moveHorizontal, 0);
+
+        }
 
         // Apply the movement to the character
         rigidBody.AddForce(movement * speed);
@@ -50,7 +60,7 @@ public class PlayerController : MonoBehaviour {
             collision.gameObject.SetActive(false);
             count = count + 1;
             SetCountText();
-        } 
+        }
     }
 
     void SetCountText()
